@@ -1,0 +1,20 @@
+/* styles/schedule.css */
+.schedule-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.schedule-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #1e3a8a;
+}
+.auth-message {
+  padding: 20px;
+  background: #fff3cd;
+  color: #856404;
+  border-radius: 4px;
+  margin-top: 20px;
+  text-align: center;
+}

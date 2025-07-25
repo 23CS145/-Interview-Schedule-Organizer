@@ -1,0 +1,75 @@
+/* styles/dashboard.css */
+.dashboard-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.dashboard-title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #1e3a8a;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.dashboard-subtitle {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #1e40af;
+}
+
+.user-role {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.role-description {
+  margin-bottom: 25px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.action-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background-color: #1d4ed8;
+  text-decoration: none;
+}
+
+.action-button.secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.action-button.secondary:hover {
+  background-color: #d1d5db;
+}

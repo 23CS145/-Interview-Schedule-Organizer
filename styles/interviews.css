@@ -1,0 +1,41 @@
+/* styles/interviews.css */
+.interviews-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.interviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.interviews-header h1 {
+  font-size: 24px;
+  color: #1e3a8a;
+}
+
+.new-interview-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.new-interview-button:hover {
+  background-color: #1d4ed8;
+  text-decoration: none;
+}
+
+.loading, .error {
+  padding: 20px;
+  text-align: center;
+}
+
+.error {
+  color: #b91c1c;
+}

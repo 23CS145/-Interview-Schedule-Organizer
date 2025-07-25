@@ -1,0 +1,28 @@
+/* styles/role-select.css */
+.role-select-form {
+  margin-top: 20px;
+}
+
+.role-select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.submit-button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+}
+.role-select-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}

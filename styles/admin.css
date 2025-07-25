@@ -1,0 +1,26 @@
+/* styles/admin.css */
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.admin-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #1e3a8a;
+}
+
+.admin-subtitle {
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+.loading, .error {
+  padding: 20px;
+  text-align: center;
+}
+
+.error {
+  color: #b91c1c;
+}

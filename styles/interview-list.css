@@ -1,0 +1,58 @@
+
+/* styles/interview-list.css */
+.interview-list-container {
+  margin-top: 20px;
+}
+
+.no-interviews {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.interview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.interview-table th {
+  background-color: #f3f4f6;
+  text-align: left;
+  padding: 12px 15px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.interview-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.interview-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.interview-table a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.interview-table a:hover {
+  text-decoration: underline;
+}
+
+.edit-button {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #e5e7eb;
+  color: #374151;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: #d1d5db;
+  text-decoration: none;
+}

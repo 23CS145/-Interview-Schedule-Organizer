@@ -1,0 +1,71 @@
+/* styles/login.css */
+.login-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #2563eb;
+}
+
+.login-subtitle {
+  margin-bottom: 30px;
+  color: #6b7280;
+}
+
+.github-login-button {
+  background-color: #24292e;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.github-login-button:hover {
+  background-color: #1a1f24;
+}
+
+.role-select-container {
+  margin-top: 20px;
+}
+
+.role-select-container h2 {
+  margin-bottom: 10px;
+}
+
+.role-select-container p {
+  margin-bottom: 20px;
+  color: #6b7280;
+}
+
+.loading-message {
+  padding: 20px;
+}
+.error-message {
+  color: #dc2626;
+  background-color: #fee2e2;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.logout-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+}

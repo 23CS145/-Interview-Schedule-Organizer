@@ -1,0 +1,46 @@
+
+/* styles/interview-form.css */
+.interview-form {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.interview-form .form-group {
+  margin-bottom: 20px;
+}
+
+.interview-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.interview-form input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.interview-form .submit-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.interview-form .submit-button:hover {
+  background-color: #1d4ed8;
+}
+
+.interview-form button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
