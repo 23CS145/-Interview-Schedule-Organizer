@@ -1,4 +1,3 @@
-// app/(dashboard)/schedule/[id]/edit/page.js
 'use client';
 import { useEffect, useState } from 'react';
 import InterviewForm from '@/components/InterviewForm';

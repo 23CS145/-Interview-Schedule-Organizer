@@ -1,4 +1,3 @@
-// app/(dashboard)/dashboard/page.js
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import '@/styles/dashboard.css';

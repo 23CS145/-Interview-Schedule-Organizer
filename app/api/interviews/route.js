@@ -1,4 +1,3 @@
-// app/api/interviews/route.js
 import  connectDB  from '@/lib/mongodb';
 import Interview from '@/models/Interview';
 import { getServerSession } from 'next-auth';
@@ -41,8 +40,6 @@ export async function POST(req) {
   try {
     await connectDB();
     const body = await req.json();
-    
-    // Add createdBy field
     const interviewData = {
       ...body,
       createdBy: session.user.id,

@@ -28,7 +28,6 @@ export default function LoginPage() {
   }, [status, session,logout]);
 
   const handleGitHubLogin = () => {
-    // Force GitHub to show account selector every time
     signIn('github', { 
       prompt: 'select_account',
       callbackUrl: '/login'
@@ -95,20 +94,13 @@ export default function LoginPage() {
         <>
           <h1>Interview Scheduler</h1>
           <button 
-            onClick={handleGitHubLogin}  // Use the new handler
+            onClick={handleGitHubLogin}  
             className="github-login-button"
             disabled={loading}
           >
             Sign in with GitHub
           </button>
 
-          {/* <button 
-            onClick={() => signIn('github')}
-            className="github-login-button"
-            disabled={loading}
-          >
-            Sign in with GitHub
-          </button> */}
         </>
       ) : showRoleSelect ? (
         <RoleSelect onSelect={handleRoleSelect} loading={loading} />

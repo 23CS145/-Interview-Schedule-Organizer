@@ -1,4 +1,3 @@
-/* styles/navbar.css */
 .navbar {
   background-color: #2563eb;
   color: white;
@@ -65,8 +64,6 @@
   background-color: #dc2626;
   text-decoration: none;
 }
-
-/* Make sure login button has same styling */
 .login-button {
   background-color: #2563eb;
   color: white;

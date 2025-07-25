@@ -1,4 +1,3 @@
-// models/Interview.js
 import mongoose from 'mongoose';
 
 const interviewSchema = new mongoose.Schema({
@@ -36,8 +35,6 @@ const interviewSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
-
-// Prevent overwrite model error
 const Interview = mongoose.models.Interview || mongoose.model('Interview', interviewSchema);
 
 export default Interview;

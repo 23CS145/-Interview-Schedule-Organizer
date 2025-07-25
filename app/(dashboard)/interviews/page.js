@@ -1,4 +1,3 @@
-// app/(dashboard)/interviews/page.js
 'use client';
 import { useState, useEffect } from 'react';
 import InterviewList from '@/components/InterviewList';

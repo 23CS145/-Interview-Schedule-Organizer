@@ -1,4 +1,3 @@
-// app/api/users/route.js
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import connectDB from '@/lib/mongodb';
@@ -13,7 +12,6 @@ export async function GET(req) {
     await connectDB();
     
     if (email) {
-      // Allow any authenticated user to lookup their own data
       if (session?.user?.email !== email && session?.user?.role !== 'admin') {
         return Response.json({ error: 'Unauthorized' }, { status: 401 });
       }
@@ -22,7 +20,6 @@ export async function GET(req) {
       return Response.json(user ? [user] : []);
     }
 
-    // Admin-only full user list
     if (!session || session.user.role !== 'admin') {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -60,34 +57,6 @@ export async function POST(req) {
   }
 }
 
-// export async function PATCH(req) {
-//   const session = await getServerSession(authOptions);
-//   if (!session || session.user.role !== 'admin') {
-//     return Response.json({ error: 'Unauthorized' }, { status: 401 });
-//   }
-
-//   try {
-//     await connectDB();
-//     const { userId, role } = await req.json();
-    
-//     const user = await User.findByIdAndUpdate(
-//       userId,
-//       { role },
-//       { new: true }
-//     );
-
-//     if (!user) {
-//       return Response.json({ error: 'User not found' }, { status: 404 });
-//     }
-
-//     return Response.json(user);
-//   } catch (error) {
-//     console.error('Error in users PATCH:', error);
-//     return Response.json({ error: 'Failed to update user' }, { status: 500 });
-//   }
-// }
-
-// app/api/users/route.js
 export async function PATCH(req) {
   const session = await getServerSession(authOptions);
   
@@ -99,7 +68,6 @@ export async function PATCH(req) {
     await connectDB();
     const { userId, role, name, email } = await req.json();
     
-    // Admins can update any user's role
     if (session.user.role === 'admin') {
       const user = await User.findByIdAndUpdate(
         userId,
@@ -113,7 +81,6 @@ export async function PATCH(req) {
 
       return Response.json(user);
     }
-    // Regular users can only update their own name
     else if (session.user.id === userId) {
       const updateData = { name };
       

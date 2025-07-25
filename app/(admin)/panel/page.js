@@ -1,4 +1,3 @@
-// app/(admin)/panel/page.js
 'use client';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -58,7 +57,7 @@ export default function AdminPanel() {
         user._id === userId ? { ...user, role: newRole } : user
       ));
     } catch (error) {
-      throw error; // Let UserTable handle the error
+      throw error; 
     }
   };
 

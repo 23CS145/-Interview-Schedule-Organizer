@@ -1,4 +1,3 @@
-// components/ProfileCard.js
 'use client';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -44,7 +43,6 @@ export default function ProfileCard({ user }) {
 
       const updatedUser = await response.json();
       
-      // Update the session if the current user is updating their own profile
       if (session.user.email === updatedUser.email) {
         await update({
           ...session,

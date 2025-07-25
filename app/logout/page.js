@@ -8,11 +8,8 @@ export default function LogoutPage() {
 
   useEffect(() => {
     const performLogout = async () => {
-      // Clear client-side cache
       window.localStorage.removeItem('nextauth.message');
-      // Perform sign out
       await signOut({ callbackUrl: '/login', redirect: false });
-      // Redirect to login
       router.push('/login');
     };
     

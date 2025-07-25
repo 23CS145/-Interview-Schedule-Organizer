@@ -1,4 +1,3 @@
-// components/Navbar.js
 'use client';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
@@ -10,19 +9,16 @@ export default function Navbar() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    // Clear client-side cache
     if (typeof window !== 'undefined') {
       localStorage.removeItem('nextauth.message');
       sessionStorage.clear();
     }
     
-    // Sign out and redirect
     await signOut({ 
       redirect: false,
       callbackUrl: '/login?logout=true' 
     });
     
-    // Force hard refresh to clear all session data
     window.location.href = '/login?logout=true';
   };
 

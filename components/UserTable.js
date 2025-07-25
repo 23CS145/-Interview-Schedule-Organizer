@@ -1,4 +1,3 @@
-// components/UserTable.js
 'use client';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -8,20 +7,8 @@ import '@/styles/user-table.css';
 export default function UserTable({ users, onRoleChange }) {
   const { data: session } = useSession();
   const router = useRouter();
-  const [loading, setLoading] = useState(null);//
+  const [loading, setLoadingId] = useState(null);//
   const [error, setError] = useState(null);
-
-  // const handleRoleUpdate = async (userId, newRole) => {
-  //   setLoading(true);
-  //   setError(null);
-  //   try {
-  //     await onRoleChange(userId, newRole);
-  //   } catch (err) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleRoleUpdate = async (userId, newRole) => {
     setLoadingId(userId);
@@ -41,7 +28,6 @@ export default function UserTable({ users, onRoleChange }) {
       const updatedUser = await response.json();
       onRoleChange(userId, newRole);
       
-      // If updating current user's role, force logout
       if (session.user.id === userId) {
         router.push('/logout');
       }

@@ -1,4 +1,3 @@
-// app/api/interviews/[id]/route.js
 import  connectDB  from '@/lib/mongodb';
 import Interview from '@/models/Interview';
 import { getServerSession } from 'next-auth';
@@ -51,7 +50,6 @@ export async function PATCH(req, { params }) {
     await connectDB();
     const body = await req.json();
     
-    // Check if user is allowed to update this interview
     const existingInterview = await Interview.findById(params.id);
     if (!existingInterview) {
       return new Response(JSON.stringify({ error: 'Interview not found' }), {
@@ -61,8 +59,6 @@ export async function PATCH(req, { params }) {
         },
       });
     }
-    
-    // Only admin or creator can update
     if (session.user.role !== 'admin' && existingInterview.createdBy.toString() !== session.user.id) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 403,
@@ -104,7 +100,6 @@ export async function DELETE(req, { params }) {
   try {
     await connectDB();
     
-    // Check if user is allowed to delete this interview
     const existingInterview = await Interview.findById(params.id);
     if (!existingInterview) {
       return new Response(JSON.stringify({ error: 'Interview not found' }), {
@@ -115,7 +110,6 @@ export async function DELETE(req, { params }) {
       });
     }
     
-    // Only admin or creator can delete
     if (session.user.role !== 'admin' && existingInterview.createdBy.toString() !== session.user.id) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 403,
