@@ -59,7 +59,7 @@ export async function POST(req) {
 
 export async function PATCH(req) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -67,39 +67,17 @@ export async function PATCH(req) {
   try {
     await connectDB();
     const { userId, role, name, email } = await req.json();
-    
-    if (session.user.role === 'admin') {
-      const user = await User.findByIdAndUpdate(
-        userId,
-        { role },
-        { new: true }
-      ).select('-__v');
 
-      if (!user) {
-        return Response.json({ error: 'User not found' }, { status: 404 });
-      }
+    const updateData = {};
+    if (role) updateData.role = role;
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
 
-      return Response.json(user);
-    }
-    else if (session.user.id === userId) {
-      const updateData = { name };
-      
-      if (email && email !== session.user.email) {
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-          return Response.json(
-            { error: 'Email already in use' },
-            { status: 400 }
-          );
-        }
-        updateData.email = email;
-      }
-
-      const user = await User.findByIdAndUpdate(
-        userId,
-        updateData,
-        { new: true }
-      ).select('-__v');
+    if (
+      session.user.role === 'admin' || 
+      session.user.id === userId
+    ) {
+      const user = await User.findByIdAndUpdate(userId, updateData, { new: true }).select('-__v');
 
       if (!user) {
         return Response.json({ error: 'User not found' }, { status: 404 });
@@ -107,16 +85,10 @@ export async function PATCH(req) {
 
       return Response.json(user);
     } else {
-      return Response.json(
-        { error: 'You can only update your own profile' },
-        { status: 403 }
-      );
+      return Response.json({ error: 'Unauthorized update' }, { status: 403 });
     }
   } catch (error) {
     console.error('Error updating user:', error);
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -44,13 +44,14 @@ export default function ProfileCard({ user }) {
       const updatedUser = await response.json();
       
       if (session.user.email === updatedUser.email) {
-        await update({
-          ...session,
-          user: {
-            ...session.user,
-            name: updatedUser.name
-          }
-        });
+        // await update({
+        //   ...session,
+        //   user: {
+        //     ...session.user,
+        //     name: updatedUser.name
+        //   }
+        // });
+        await update();
       }
 
       setIsEditing(false);

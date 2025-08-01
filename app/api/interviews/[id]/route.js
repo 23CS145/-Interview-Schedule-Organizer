@@ -89,45 +89,34 @@ export async function PATCH(req, { params }) {
 export async function DELETE(req, { params }) {
   const session = await getServerSession(authOptions);
   if (!session) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     await connectDB();
-    
-    const existingInterview = await Interview.findById(params.id);
+    const interviewId = params.id;
+    const existingInterview = await Interview.findById(interviewId);
     if (!existingInterview) {
-      return new Response(JSON.stringify({ error: 'Interview not found' }), {
-        status: 404,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      return Response.json({ error: 'Interview not found' }, { status: 404 });
     }
-    
-    if (session.user.role !== 'admin' && existingInterview.createdBy.toString() !== session.user.id) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 403,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    const isAdmin = session.user.role === 'admin';
+    const isCreator = existingInterview.createdBy.toString() === session.user.id;
+    const isInterviewer = existingInterview.interviewerId.toString() === session.user.id;
+
+    if (!isAdmin && !isCreator && !isInterviewer) {
+      return Response.json(
+        { error: 'You are not authorized to delete this interview' },
+        { status: 403 }
+      );
     }
-    
-    await Interview.findByIdAndDelete(params.id);
-    
+    await Interview.findByIdAndDelete(interviewId);
+
     return new Response(null, { status: 204 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to delete interview' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    console.error('Error deleting interview:', error);
+    return Response.json(
+      { error: 'Failed to delete interview' },
+      { status: 500 }
+    );
   }
 }

@@ -47,7 +47,8 @@ export default function EditInterviewPage() {
       }
     } catch (error) {
       console.error('Error updating interview:', error);
-      alert('Error updating interview. Please try again.');
+      alert('Only Admin and Interviewer can update the interview');
+      router.push('/interviews');
     }
   };
 

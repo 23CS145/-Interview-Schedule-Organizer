@@ -56,17 +56,18 @@
   color: white;
   border-radius: 6px;
   font-weight: 500;
+  text-decoration: none;
   transition: background-color 0.2s;
 }
 
 .action-button:hover {
   background-color: #1d4ed8;
-  text-decoration: none;
+  
 }
 
 .action-button.secondary {
   background-color: #e5e7eb;
-  color: #374151;
+  color: #38414e;
 }
 
 .action-button.secondary:hover {
