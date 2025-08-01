@@ -41,7 +41,7 @@ export default function UserTable({ users, onRoleChange }) {
   if (!session || session.user.role !== 'admin') {
     return (
       <div className="unauthorized-message">
-        You don't have permission to view this page
+        You don&apos;t have permission to view this page
       </div>
     );
   }

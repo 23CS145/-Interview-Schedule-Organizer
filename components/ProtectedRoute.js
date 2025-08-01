@@ -28,7 +28,7 @@ export default function ProtectedRoute({ allowedRoles, children }) {
   if (!allowedRoles.includes(session.user.role)) {
     return (
       <div className="unauthorized-container">
-        <p>You don't have permission to access this page.</p>
+        <p>You don&apos;t have permission to access this page.</p>
       </div>
     );
   }
