@@ -16,6 +16,7 @@
   width: 100%;
   padding: 12px;
   font-size: 16px;
+  
 }
 .role-select-container {
   max-width: 400px;
@@ -24,4 +25,22 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.form-group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  margin: 0px 100px;
+  
+}
+.continue-btn{
+  background-color: rgb(39, 111, 235);
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid white;
+}
+.continue-btn:hover{
+  cursor: pointer;
 }
