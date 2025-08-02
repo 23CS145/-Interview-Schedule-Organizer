@@ -1,121 +1,86 @@
-import  connectDB  from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import Interview from '@/models/Interview';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
+import { isValidObjectId } from 'mongoose';
 
 export async function GET(req, { params }) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!isValidObjectId(params.id)) {
+      return Response.json({ error: 'Invalid interview ID' }, { status: 400 });
+    }
+
     await connectDB();
-    const interview = await Interview.findById(params.id)
-      .populate('interviewerId', 'name email')
-      .populate('candidateId', 'name email');
+    
+    const interview = await Interview.findById(params.id);
     
     if (!interview) {
-      return new Response(JSON.stringify({ error: 'Interview not found' }), {
-        status: 404,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      return Response.json({ error: 'Interview not found' }, { status: 404 });
     }
-    
-    return new Response(JSON.stringify(interview), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+
+    const isAdmin = session.user.role === 'admin';
+    const isParticipant = 
+      interview.interviewerEmail === session.user.email || 
+      interview.candidateEmail === session.user.email;
+      
+    if (!isAdmin && !isParticipant) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    return Response.json(interview);
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to fetch interview' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    console.error('Error fetching interview:', error);
+    return Response.json(
+      { error: 'Internal server error', details: error.message }, 
+      { status: 500 }
+    );
   }
 }
 
 export async function PATCH(req, { params }) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }
-
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!isValidObjectId(params.id)) {
+      return Response.json({ error: 'Invalid interview ID' }, { status: 400 });
+    }
+
     await connectDB();
+    
     const body = await req.json();
-    
     const existingInterview = await Interview.findById(params.id);
-    if (!existingInterview) {
-      return new Response(JSON.stringify({ error: 'Interview not found' }), {
-        status: 404,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
-    if (session.user.role !== 'admin' && existingInterview.createdBy.toString() !== session.user.id) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 403,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
     
-    const updatedInterview = await Interview.findByIdAndUpdate(params.id, body, { new: true });
-    
-    return new Response(JSON.stringify(updatedInterview), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to update interview' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }
-}
-
-export async function DELETE(req, { params }) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  try {
-    await connectDB();
-    const interviewId = params.id;
-    const existingInterview = await Interview.findById(interviewId);
     if (!existingInterview) {
       return Response.json({ error: 'Interview not found' }, { status: 404 });
     }
+
     const isAdmin = session.user.role === 'admin';
-    const isCreator = existingInterview.createdBy.toString() === session.user.id;
-    const isInterviewer = existingInterview.interviewerId.toString() === session.user.id;
+    const isCreator = existingInterview.createdBy === session.user.email;
+    const isInterviewer = existingInterview.interviewerEmail === session.user.email;
 
     if (!isAdmin && !isCreator && !isInterviewer) {
-      return Response.json(
-        { error: 'You are not authorized to delete this interview' },
-        { status: 403 }
-      );
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
-    await Interview.findByIdAndDelete(interviewId);
 
-    return new Response(null, { status: 204 });
+    const updatedInterview = await Interview.findByIdAndUpdate(
+      params.id,
+      body,
+      { new: true }
+    );
+
+    return Response.json(updatedInterview);
   } catch (error) {
-    console.error('Error deleting interview:', error);
+    console.error('Error updating interview:', error);
     return Response.json(
-      { error: 'Failed to delete interview' },
+      { error: 'Internal server error', details: error.message },
       { status: 500 }
     );
   }

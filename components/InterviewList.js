@@ -1,63 +1,46 @@
 'use client';
-import Link from 'next/link';
-import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import '@/styles/interview-list.css';
 
-export default function InterviewList({ interviews: initialInterviews }) {
+export default function InterviewList({ interviews }) {
   const { data: session } = useSession();
-  const [interviews, setInterviews] = useState(initialInterviews);
-  const [loadingId, setLoadingId] = useState(null);
-  const [error, setError] = useState(null);
 
-  const formatDate = (dateString) => {
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const handleDelete = async (interviewId) => {
-    if (!confirm('Are you sure you want to delete this interview?')) return;
-
-    setLoadingId(interviewId);
-    setError(null);
-
+  const formatDateTime = (dateStr, timeStr) => {
     try {
-      const response = await fetch(`/api/interviews/${interviewId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete interview');
+      const isoString = `${dateStr.split('T')[0]}T${timeStr}:00`;
+      const date = new Date(isoString);
+      
+      if (isNaN(date.getTime())) {
+        console.error('Invalid date:', dateStr, timeStr);
+        return 'Date not set';
       }
 
-      setInterviews((prev) => prev.filter((i) => i._id !== interviewId));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoadingId(null);
+      return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch (error) {
+      console.error('Date formatting error:', error);
+      return 'Invalid date';
     }
   };
 
-  const isAuthorized = (interview) => {
+  const canEditDelete = (interview) => {
     if (!session) return false;
-    const isAdmin = session.user.role === 'admin';
-    const isInterviewer = session.user.role === 'interviewer';
-    const isCreator = interview.createdBy?.toString() === session.user.id;
-    const isAssignedInterviewer = interview.interviewerId?.toString() === session.user.id;
-
-    return isAdmin || (isInterviewer && (isCreator || isAssignedInterviewer));
+    return (
+      session.user.role === 'admin' ||
+      interview.createdBy === session.user.email ||
+      interview.interviewerEmail === session.user.email
+    );
   };
 
   return (
     <div className="interview-list-container">
-      {error && <div className="error-message">{error}</div>}
-
       {interviews.length === 0 ? (
         <p className="no-interviews">No interviews scheduled yet.</p>
       ) : (
@@ -66,27 +49,33 @@ export default function InterviewList({ interviews: initialInterviews }) {
             <tr>
               <th>Title</th>
               <th>Date & Time</th>
-              <th>Meeting Link</th>
-              {interviews.some((interview) => isAuthorized(interview)) && (
-                <th>Actions</th>
-              )}
+              <th>Interviewer</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {interviews.map((interview) => {
-              const canEditDelete = isAuthorized(interview);
-
-              return (
-                <tr key={interview._id}>
-                  <td>{interview.title}</td>
-                  <td>{formatDate(`${interview.date}T${interview.time}`)}</td>
-                  <td>
-                    <a href={interview.link} target="_blank" rel="noopener noreferrer">
-                      Join Meeting
-                    </a>
-                  </td>
-                  <td>
-                    {canEditDelete && (
+            {interviews.map((interview) => (
+              <tr key={interview._id}>
+                <td>{interview.title}</td>
+                 <td>{formatDateTime(interview.date, interview.time)}</td>
+                <td>
+                  {interview.interviewer?.name || interview.interviewerEmail}
+                </td>
+                <td>
+                  <div className="action-buttons">
+                    {(session.user.role === 'candidate' || 
+                      interview.interviewerEmail === session.user.email) && (
+                      <a
+                        href={interview.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="join-button"
+                      >
+                        Join Meeting
+                      </a>
+                    )}
+                    
+                    {canEditDelete(interview) && (
                       <>
                         <Link
                           href={`/schedule/${interview._id}/edit`}
@@ -97,20 +86,18 @@ export default function InterviewList({ interviews: initialInterviews }) {
                         <button
                           onClick={() => handleDelete(interview._id)}
                           className="delete-button"
-                          disabled={loadingId === interview._id}
                         >
-                          {loadingId === interview._id ? 'Deleting...' : 'Delete'}
+                          Delete
                         </button>
                       </>
                     )}
-                  </td>
-                </tr>
-              );
-            })}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       )}
     </div>
   );
 }
-

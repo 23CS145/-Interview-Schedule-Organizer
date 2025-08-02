@@ -5,33 +5,36 @@ import User from '@/models/User';
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
-  const url = new URL(req.url);
-  const email = url.searchParams.get('email');
+  if (!session) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   try {
     await connectDB();
-    
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get('search');
+    const email = searchParams.get('email');
+
     if (email) {
-      if (session?.user?.email !== email && session?.user?.role !== 'admin') {
-        return Response.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-      
       const user = await User.findOne({ email }).select('-__v');
       return Response.json(user ? [user] : []);
     }
 
-    if (!session || session.user.role !== 'admin') {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (search) {
+      const users = await User.find({
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } }
+        ]
+      }).limit(10).select('name email role');
+      return Response.json(users);
     }
 
-    const users = await User.find().select('-__v');
-    return Response.json(users);
+    return Response.json([]);
   } catch (error) {
-    console.error('Error in users GET:', error);
     return Response.json({ error: 'Server error' }, { status: 500 });
   }
 }
-
 export async function POST(req) {
   try {
     await connectDB();

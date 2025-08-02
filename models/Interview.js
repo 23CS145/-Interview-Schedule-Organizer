@@ -3,38 +3,45 @@ import mongoose from 'mongoose';
 const interviewSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   date: {
-    type: String,
-    required: true,
+    type: Date,
+    required: true
   },
   time: {
     type: String,
-    required: true,
+    required: true
   },
   link: {
     type: String,
-    required: true,
+    required: true
   },
-  interviewerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+  interviewerEmail: {  
+    type: String,
     required: true,
+    index: true
   },
-  candidateId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+  candidateEmail: {    
+    type: String,
     required: true,
+    index: true
   },
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+    type: String,      
+    required: true
   },
+  status: {
+    type: String,
+    enum: ['scheduled', 'completed', 'cancelled'],
+    default: 'scheduled'
+  }
 }, {
-  timestamps: true,
+  timestamps: true
 });
-const Interview = mongoose.models.Interview || mongoose.model('Interview', interviewSchema);
 
+interviewSchema.index({ interviewerEmail: 1, date: 1 });
+interviewSchema.index({ candidateEmail: 1, date: 1 });
+
+const Interview = mongoose.models.Interview || mongoose.model('Interview', interviewSchema);
 export default Interview;
