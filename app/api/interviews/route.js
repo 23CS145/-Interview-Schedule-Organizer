@@ -93,38 +93,3 @@ export async function POST(req) {
     return Response.json({ error: 'Failed to create interview' }, { status: 500 });
   }
 }
-
-export async function DELETE(req, { params }) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  try {
-    await connectDB();
-    const { id } = params;
-    const existingInterview = await Interview.findById(id);
-    if (!existingInterview) {
-      return Response.json({ error: 'Interview not found' }, { status: 404 });
-    }
-    const isAdmin = session.user.role === 'admin';
-    const isCreator = existingInterview.createdBy === session.user.email;
-    const isInterviewer = existingInterview.interviewerEmail === session.user.email;
-
-    if (!isAdmin && !isCreator && !isInterviewer) {
-      return Response.json(
-        { error: 'You are not authorized to delete this interview' },
-        { status: 403 }
-      );
-    }
-    await Interview.findByIdAndDelete(id);
-
-    return new Response(null, { status: 204 });
-  } catch (error) {
-    console.error('Error deleting interview:', error);
-    return Response.json(
-      { error: 'Failed to delete interview' },
-      { status: 500 }
-    );
-  }
-}

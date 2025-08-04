@@ -1,38 +1,10 @@
 'use client';
-import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '@/styles/interview-list.css';
 
 export default function InterviewList({ interviews }) {
   const { data: session } = useSession();
-  const router = useRouter();
-  const [loadingId, setLoadingId] = useState(null);
-  const [error, setError] = useState(null);
-
-const handleDelete = async (interviewId) => {
-  if (!window.confirm('Are you sure you want to delete this interview?')) {
-    return;
-  }
-
-  try {
-    const response = await fetch(`/api/interviews/${interviewId}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to delete interview');
-    }
-    window.location.reload();
-  } catch (err) {
-    console.error('Delete error:', err);
-    alert(err.message);
-  }
-};
 
   const formatDateTime = (dateStr, timeStr) => {
     try {
@@ -69,8 +41,6 @@ const handleDelete = async (interviewId) => {
 
   return (
     <div className="interview-list-container">
-      {error && <div className="error-message">{error}</div>}
-      
       {interviews.length === 0 ? (
         <p className="no-interviews">No interviews scheduled yet.</p>
       ) : (
@@ -87,14 +57,14 @@ const handleDelete = async (interviewId) => {
             {interviews.map((interview) => (
               <tr key={interview._id}>
                 <td>{interview.title}</td>
-                <td>{formatDateTime(interview.date, interview.time)}</td>
+                 <td>{formatDateTime(interview.date, interview.time)}</td>
                 <td>
                   {interview.interviewer?.name || interview.interviewerEmail}
                 </td>
                 <td>
                   <div className="action-buttons">
-                    {(session?.user?.role === 'candidate' || 
-                      interview.interviewerEmail === session?.user?.email) && (
+                    {(session.user.role === 'candidate' || 
+                      interview.interviewerEmail === session.user.email) && (
                       <a
                         href={interview.link}
                         target="_blank"
@@ -116,9 +86,8 @@ const handleDelete = async (interviewId) => {
                         <button
                           onClick={() => handleDelete(interview._id)}
                           className="delete-button"
-                          disabled={loadingId === interview._id}
                         >
-                          {loadingId === interview._id ? 'Deleting...' : 'Delete'}
+                          Delete
                         </button>
                       </>
                     )}
