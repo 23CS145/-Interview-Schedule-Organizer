@@ -1,17 +1,26 @@
 .interview-list-container {
   margin-top: 20px;
+  overflow-x: auto;
 }
 
 .no-interviews {
   padding: 20px;
   text-align: center;
   color: #6b7280;
+  font-size: 1.1rem;
+  background-color: #f9fafb;
+  border-radius: 6px;
 }
 
 .interview-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  min-width: 700px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .interview-table th {
@@ -19,25 +28,34 @@
   padding: 12px 15px;
   text-align: left;
   font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .interview-table td {
   padding: 12px 15px;
   border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  vertical-align: middle;
 }
 
 .interview-table tr:hover {
   background-color: #f9fafb;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .edit-button {
-  display: inline-block;
   padding: 6px 12px;
   background-color: #3b82f6;
   color: white;
   border-radius: 4px;
-  margin-right: 8px;
   text-decoration: none;
+  transition: background-color 0.2s;
 }
 
 .edit-button:hover {
@@ -51,6 +69,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .delete-button:hover {
@@ -62,10 +81,24 @@
   cursor: not-allowed;
 }
 
+.join-button {
+  padding: 6px 12px;
+  background-color: #10b981;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.join-button:hover {
+  background-color: #059669;
+}
+
 .error-message {
   color: #dc2626;
   background-color: #fee2e2;
   padding: 12px;
   border-radius: 4px;
   margin-bottom: 20px;
+  font-weight: 500;
 }

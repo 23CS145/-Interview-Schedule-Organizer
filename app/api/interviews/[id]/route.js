@@ -85,3 +85,42 @@ export async function PATCH(req, { params }) {
     );
   }
 }
+
+export async function DELETE(req, { params }) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!isValidObjectId(params.id)) {
+      return Response.json({ error: 'Invalid interview ID' }, { status: 400 });
+    }
+
+    await connectDB();
+    
+    const interview = await Interview.findById(params.id);
+    
+    if (!interview) {
+      return Response.json({ error: 'Interview not found' }, { status: 404 });
+    }
+
+    const isAdmin = session.user.role === 'admin';
+    const isCreator = interview.createdBy === session.user.email;
+    const isInterviewer = interview.interviewerEmail === session.user.email;
+
+    if (!isAdmin && !isCreator && !isInterviewer) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    await Interview.findByIdAndDelete(params.id);
+
+    return new Response(null, { status: 204 });
+  } catch (error) {
+    console.error('Error deleting interview:', error);
+    return Response.json(
+      { error: 'Failed to delete interview', details: error.message },
+      { status: 500 }
+    );
+  }
+}
